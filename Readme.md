@@ -16,9 +16,7 @@ docker-compose を利用しています。
 
 ### 2. サンプル（auth_request）
 nginx, server（express）を組み合わせたプレ認証構成。
-```plantuml
-!include docs/auth_request_sequence.puml
-```
+![サンプルシーケンス(サンプル(auth_request)](docs/auth_request_sequence.png)
 
 動作確認コマンド（curl）
 ```code:curl_sumple
