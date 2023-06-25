@@ -1,0 +1,59 @@
+@startuml
+title: サンプルシーケンス(auth_request)
+
+client -> nginx: POST /home
+note left
+  header:
+    Authorization: accessToken_auth
+end note
+activate nginx
+  nginx -> server: GET /internal/auth
+  note left
+    header:
+      Authorization: accessToken_auth
+  end note
+  activate server
+    server -> server: check header
+    note left
+      Authorization に"accessToken_auth"が
+      指定されているか検証
+    end note
+
+    alt 認証NG
+      server --> nginx: 401 Unauthorized
+      nginx --> client: 401 Unauthorized
+    end
+
+    server --> nginx: 200 OK
+    note left
+      header:
+        Authorization: accessToken_home
+    end note
+    nginx -> nginx: set Authorization header
+  deactivate server
+
+  nginx -> server: POST /internal/home
+  activate server
+    note left
+      header:
+        Authorization: accessToken_home
+    end note
+
+    server -> server: check header
+    note left
+      Authorization に"accessToken_home"が
+      指定されているか検証
+    end note
+
+    alt 認証NG
+      server --> nginx: 401 Unauthorized
+      nginx --> client: 401 Unauthorized
+    end
+
+    server --> nginx: 200 OK
+  deactivate server
+
+  nginx --> client: 200 OK
+deactivate nginx
+
+@enduml
